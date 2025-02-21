@@ -10,4 +10,5 @@ public class MasterarbeitGithubActionTestApplication {
         SpringApplication.run(MasterarbeitGithubActionTestApplication.class, args);
     }
 
+
 }
