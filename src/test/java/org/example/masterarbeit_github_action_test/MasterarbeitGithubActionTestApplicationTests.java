@@ -17,8 +17,6 @@ class MasterarbeitGithubActionTestApplicationTests {
         assertEquals(1,1);
     }
 
-
-
     @Test
     void test4(){
         assertEquals(3,3);
