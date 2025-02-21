@@ -22,4 +22,9 @@ class MasterarbeitGithubActionTestApplicationTests {
         assertEquals(1,3);
     }
 
+    @Test
+    void test4(){
+        assertEquals(3,3);
+    }
+
 }
