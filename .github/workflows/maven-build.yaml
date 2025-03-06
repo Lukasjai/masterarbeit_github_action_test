@@ -71,7 +71,7 @@ jobs:
       - name: Login to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku auth:token | docker login --username=_ --password-stdin registry.heroku.com
+        run: heroku auth:token | heroku container:login
 
       - name: Create Heroku Container
         env:
