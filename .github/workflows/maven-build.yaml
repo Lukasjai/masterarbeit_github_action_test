@@ -9,6 +9,7 @@ on:
 
   push:
     branches:
+      - master
       - main
       - develop
     paths-ignore:
@@ -84,3 +85,4 @@ jobs:
         env:
           HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
         run: heroku restart -a $HEROKU_APP_NAME
+
