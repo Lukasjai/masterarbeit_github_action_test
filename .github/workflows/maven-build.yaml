@@ -94,6 +94,7 @@ jobs:
   deploy_test:
     name: Deploy to Test Environment
     runs-on: ubuntu-latest
+    environment: Test
     needs: test
     if: github.ref == 'refs/heads/main'
     steps:
