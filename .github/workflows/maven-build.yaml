@@ -14,6 +14,7 @@ jobs:
   build_and_verify:
     name: build and verify
     runs-on: ubuntu-latest
+    environment: Dev
     permissions:
       checks: write
       pull-requests: write
@@ -34,7 +35,6 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
-    environment: Dev
     needs: build_and_verify
     permissions:
       checks: write
