@@ -14,7 +14,6 @@ jobs:
   build_and_verify:
     name: build and verify
     runs-on: ubuntu-latest
-    environment: Dev
     permissions:
       checks: write
       pull-requests: write
@@ -65,6 +64,7 @@ jobs:
   deploy_dev:
     name: Deploy to Dev Environment
     runs-on: ubuntu-latest
+    environment: Dev
     needs: test
     if: github.ref == 'refs/heads/development'
     steps:
