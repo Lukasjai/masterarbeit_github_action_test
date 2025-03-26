@@ -25,5 +25,6 @@ public class CalculatorController {
         int result = calculatorService.add(a, b);
         model.addAttribute("result", result);
         return "calculator";
+
     }
 }
