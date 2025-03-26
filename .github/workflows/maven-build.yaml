@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - develop
+      - development
     paths-ignore:
       - '**.md'
       - '.github/workflows/**/*'
