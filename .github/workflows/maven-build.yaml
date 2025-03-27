@@ -59,7 +59,7 @@ jobs:
           files: ./target/surefire-reports/TEST-*.xml
 
      
-  deploy:
+  deploy_dev:
     name: Deploy on Push
     runs-on: ubuntu-latest
     environment: Dev
@@ -87,3 +87,32 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{ secrets.HEROKU_DEV_SECRET }}
           heroku_email: ${{ secrets.E_MAIL}}
+
+  deploy_test:
+    name: Deploy to Test Environment
+    runs-on: ubuntu-latest
+    environment: Test
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          architecture: x64
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: ./mvnw -B clean package --no-transfer-progress
+
+      - name: Install Heroku CLI
+        run: curl https://cli-assets.heroku.com/install.sh | sh
+      - uses: akhileshns/heroku-deploy@v3.14.15
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_TEST_SECRET}}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
