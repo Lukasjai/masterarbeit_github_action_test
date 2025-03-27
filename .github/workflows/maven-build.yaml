@@ -42,10 +42,10 @@ jobs:
         run: ./mvnw -B clean package --no-transfer-progress
 
       - name: Install Heroku CLI
-        run: curl https://cli-assets.heroku.com/install.sh | sh
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
       - uses: akhileshns/heroku-deploy@v3.14.15
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_TEST_SECRET }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          branch: ${{ github.ref_name }}
