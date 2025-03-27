@@ -88,11 +88,21 @@ jobs:
 
       - name: Install Heroku CLI
         run: curl https://cli-assets.heroku.com/install.sh | sh
-      - uses: akhileshns/heroku-deploy@v3.14.15
-        with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_DEV_SECRET }}
-          heroku_email: ${{ secrets.E_MAIL }}
+      - name: Configure Heroku Git authentication via .netrc
+        run: |
+          cat > ~/.netrc <<EOF
+          machine git.heroku.com
+            login _
+            password $HEROKU_API_KEY
+          EOF
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Add Heroku remote
+        run: git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_DEV_SECRET }}.git
+
+      - name: Push to Heroku (force deployment)
+        run: git push heroku HEAD:refs/heads/main --force
 
   deploy_test:
     name: Deploy to Test Environment
