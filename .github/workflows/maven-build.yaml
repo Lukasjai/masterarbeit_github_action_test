@@ -99,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: Test
     needs: test
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
