@@ -161,6 +161,7 @@ jobs:
   deploy_prod:
     name: Deploy to Production
     runs-on: ubuntu-latest
+    environment: Prod
     if: github.event_name == 'workflow_dispatch'
     steps:
       - run: echo "I'm merging!"
