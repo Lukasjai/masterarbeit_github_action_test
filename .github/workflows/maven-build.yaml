@@ -10,7 +10,7 @@ on:
       - '.github/workflows/**/*'
   pull_request:
     branches:
-      - main
+      - master
     paths-ignore:
       - '**.md'
       - '.github/workflows/**/*'
@@ -90,9 +90,9 @@ jobs:
         run: curl https://cli-assets.heroku.com/install.sh | sh
       - uses: akhileshns/heroku-deploy@v3.14.15
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_DEV_SECRET }}
-          heroku_email: ${{ secrets.E_MAIL}}
+          heroku_email: ${{ secrets.E_MAIL }}
 
   deploy_test:
     name: Deploy to Test Environment
