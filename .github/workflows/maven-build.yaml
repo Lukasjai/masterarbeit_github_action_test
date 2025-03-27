@@ -48,3 +48,4 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_TEST_SECRET }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          branch: ${{ github.ref_name }}
