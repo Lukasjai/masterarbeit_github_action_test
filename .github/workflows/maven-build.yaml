@@ -44,9 +44,16 @@ jobs:
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
-      - uses: akhileshns/heroku-deploy@v3.14.15
-        with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_TEST_SECRET }}
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          branch: 'master'
+
+      - name: Authenticate with Heroku
+        run: echo "$HEROKU_API_KEY" | heroku auth:token
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Add Heroku Git Remote
+        run: git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_TEST_SECRET }}.git
+
+      - name: Push to Heroku
+        run: git push heroku HEAD:refs/heads/master --force
+
+
