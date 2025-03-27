@@ -15,6 +15,11 @@ on:
       - '**.md'
       - '.github/workflows/**/*'
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment to deploy'
+        required: true
+        default: 'production'
 
 jobs:
 
@@ -155,7 +160,7 @@ jobs:
   deploy_prod:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'Prod'
     steps:
       - run: echo "I'm merging!"
       - name: Check out the repo
