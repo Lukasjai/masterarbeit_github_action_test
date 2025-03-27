@@ -21,6 +21,7 @@ public class CalculatorController {
     }
 
 
+
     @GetMapping("/calculate")
     public String calculate(@RequestParam int a, @RequestParam int b, Model model) {
         int result = calculatorService.add(a, b);
