@@ -44,17 +44,20 @@ jobs:
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
-      - name: create initial app
-        run: heroku create test-application
-      - name: Authenticate with Heroku
-        run: echo "$HEROKU_API_KEY" | heroku auth:token
+      - name: Configure Heroku Git authentication via .netrc
+        run: |
+          cat > ~/.netrc <<EOF
+          machine git.heroku.com
+            login _
+            password $HEROKU_API_KEY
+          EOF
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
-      - name: Add Heroku Git Remote
+      - name: Add Heroku remote
         run: git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_TEST_SECRET }}.git
 
-      - name: Push to Heroku
-        run: git push heroku HEAD:refs/heads/master --force
+      - name: Push to Heroku (force deployment)
+        run: git push heroku HEAD:refs/heads/main --force
 
 
