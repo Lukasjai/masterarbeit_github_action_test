@@ -97,6 +97,9 @@ jobs:
   deploy_test:
     name: Deploy to Test Environment
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
     environment: Test
     needs: test
     if: github.ref == 'refs/heads/master'
