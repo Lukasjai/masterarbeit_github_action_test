@@ -8,7 +8,7 @@ on:
         required: true
         default: 'production'
   schedule:
-    - cron: '35 7 * * *'
+    - cron: '5 9 * * *'
   push:
     branches:
       - master
@@ -29,7 +29,7 @@ jobs:
   build_and_verify:
     name: build and verify
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
     permissions:
       checks: write
       pull-requests: write
@@ -50,7 +50,7 @@ jobs:
   test:
       name: Run Tests
       runs-on: ubuntu-latest
-      if: github.event_name == 'schedule'
+      if: github.event_name == 'schedule' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
       needs: build_and_verify
       permissions:
         checks: write
