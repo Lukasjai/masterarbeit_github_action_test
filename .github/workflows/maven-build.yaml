@@ -8,7 +8,7 @@ on:
         required: true
         default: 'production'
   schedule:
-    - cron: '30 9 * * *'
+    - cron: '0 23 * * *'
   push:
     branches:
       - master
@@ -176,6 +176,7 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     environment: Prod
+    needs: test
     if: github.event_name == 'workflow_dispatch'
     steps:
       - run: echo "I'm merging!"
