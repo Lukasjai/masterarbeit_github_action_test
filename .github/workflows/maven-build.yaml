@@ -27,7 +27,7 @@ on:
 jobs:
 
   build_and_verify:
-    name: build and verify
+    name: Build and verify
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
     permissions:
@@ -76,7 +76,7 @@ jobs:
             files: ./target/surefire-reports/TEST-*.xml
 
   deploy_dev:
-    name: Deploy on Push
+    name: Deploy to Dev
     runs-on: ubuntu-latest
     environment: Dev
     needs: test
@@ -127,7 +127,7 @@ jobs:
         run: git push heroku HEAD:refs/heads/main --force
 
   deploy_test:
-    name: Deploy to Test Environment
+    name: Deploy to Test
     runs-on: ubuntu-latest
     needs: test
     permissions:
