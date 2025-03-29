@@ -136,7 +136,6 @@ jobs:
     environment: Test
     if: github.ref == 'refs/heads/master' && github.event_name != 'workflow_dispatch' && github.event_name != 'schedule'
     steps:
-      - run: echo "I'm merging!"
       - name: Check out the repo
         uses: actions/checkout@v4
         with:
@@ -179,7 +178,6 @@ jobs:
     needs: test
     if: github.event_name == 'workflow_dispatch'
     steps:
-      - run: echo "I'm merging!"
       - name: Check out the repo
         uses: actions/checkout@v4
         with:
