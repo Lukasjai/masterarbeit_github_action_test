@@ -48,32 +48,32 @@ jobs:
         run: ./mvnw -B clean verify --no-transfer-progress
 
   test:
-      name: Run Tests
-      runs-on: ubuntu-latest
-      if: github.event_name == 'schedule' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
-      needs: build_and_verify
-      permissions:
-        checks: write
-        pull-requests: write
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
-        - name: Setup Java 17
-          uses: actions/setup-java@v4
-          with:
-            java-version: '17'
-            distribution: 'temurin'
-            architecture: x64
-            cache: 'maven'
+    name: Run Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
+    needs: build_and_verify
+    permissions:
+      checks: write
+      pull-requests: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          architecture: x64
+          cache: 'maven'
 
-        - name: Run Maven Tests
-          run: ./mvnw -B test --no-transfer-progress
+      - name: Run Maven Tests
+        run: ./mvnw -B test --no-transfer-progress
 
-        - name: Publish Test Results
-          uses: EnricoMi/publish-unit-test-result-action/linux@v2
-          if: always()
-          with:
-            files: ./target/surefire-reports/TEST-*.xml
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/linux@v2
+        if: always()
+        with:
+          files: ./target/surefire-reports/TEST-*.xml
 
   deploy_dev:
     name: Deploy to Dev
