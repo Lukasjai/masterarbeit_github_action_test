@@ -68,12 +68,12 @@ jobs:
 
       - name: Run Maven Tests
         run: ./mvnw -B test --no-transfer-progress
-      - name: Publish Test Results
-        if: ${{ !env.ACT }}
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/linux@v2
+        if: always()
+        with:
+          files: ./target/surefire-reports/TEST-*.xml
 
   deploy_dev:
     name: Deploy to Dev
