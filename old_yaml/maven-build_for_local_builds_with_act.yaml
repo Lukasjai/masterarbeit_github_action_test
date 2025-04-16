@@ -25,11 +25,23 @@ on:
 
 
 jobs:
+  start_timer:
+    runs-on: ubuntu-latest
+    outputs:
+      start_time: ${{ steps.start_time.outputs.time }}
+    steps:
+      - name: Record and Print Start Time
+        id: start_time
+        run: |
+          time_now=$(date +%s)
+          echo "Startzeit: $time_now"
+          echo "time=$time_now" >> $GITHUB_OUTPUT
 
   build_and_verify:
     name: Build and verify
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
+    needs: start_timer
     permissions:
       checks: write
       pull-requests: write
@@ -51,7 +63,7 @@ jobs:
     name: Run Tests
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
-    needs: build_and_verify
+    needs: [build_and_verify, start_timer]
     permissions:
       checks: write
       pull-requests: write
@@ -68,18 +80,18 @@ jobs:
 
       - name: Run Maven Tests
         run: ./mvnw -B test --no-transfer-progress
-
       - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action/linux@v2
-        if: always()
+        if: ${{ !env.ACT }}
+        uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          files: ./target/surefire-reports/TEST-*.xml
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
 
   deploy_dev:
     name: Deploy to Dev
     runs-on: ubuntu-latest
     environment: Dev
-    needs: test
+    needs: [test, start_timer]
     if: github.event_name == 'schedule'
     steps:
       - name: Check out the repo
@@ -126,10 +138,16 @@ jobs:
       - name: Push to Heroku (force deployment)
         run: git push heroku HEAD:refs/heads/main --force
 
+      - name: Print End Time
+        run: |
+          end_time=$(date +%s)
+          echo "Endzeit: $end_time"
+          echo "Startzeit: ${{ needs.start_timer.outputs.start_time }}"
+
   deploy_test:
     name: Deploy to Test
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test, start_timer]
     permissions:
       checks: write
       pull-requests: write
@@ -170,12 +188,26 @@ jobs:
 
       - name: Push to Heroku (force deployment)
         run: git push heroku HEAD:refs/heads/main --force
+      - name: Print End Time
+        run: |
+          end_time=$(date +%s)
+          echo "Endzeit: $end_time"
+          echo "Startzeit: ${{ needs.start_timer.outputs.start_time }}"
+      - name: Print Total Duration
+        run: |
+          start=${{ needs.start_timer.outputs.start_time }}
+          end=$(date +%s)
+          duration=$((end - start))
+          echo "🕒 Pipeline duration: ${duration} seconds"
+
+
+
 
   deploy_prod:
     name: Deploy to Production
     runs-on: ubuntu-latest
     environment: Prod
-    needs: test
+    needs: [test, start_timer]
     if: github.event_name == 'workflow_dispatch'
     steps:
       - name: Check out the repo
@@ -212,3 +244,9 @@ jobs:
 
       - name: Push to Heroku (force deployment)
         run: git push heroku HEAD:refs/heads/main --force
+      - name: Print End Time
+        run: |
+          end_time=$(date +%s)
+          echo "Endzeit: $end_time"
+          echo "Startzeit: ${{ needs.start_timer.outputs.start_time }}"
+
