@@ -15,7 +15,7 @@ public class MasterarbeitGithubActionTestApplication {
 
 
     @RequestMapping("/")
-    public String home() {return "Hello World Performance test 1.0";}
+    public String home() {return "Hello World Performance test 1 local";}
 
     //change
 }
