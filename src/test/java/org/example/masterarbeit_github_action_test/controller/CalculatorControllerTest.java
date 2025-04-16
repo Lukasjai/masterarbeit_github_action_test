@@ -29,6 +29,7 @@ class CalculatorControllerTest {
                 .andExpect(view().name("calculator"));
     }
 
+
     @Test
     void testCalculateEndpoint() throws Exception {
         when(calculatorService.add(2, 3)).thenReturn(5);  // 🔹 Mock für Addition
