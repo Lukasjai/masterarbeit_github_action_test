@@ -28,9 +28,11 @@ jobs:
 
   start_timer:
     runs-on: ubuntu-latest
+    outputs:
+      start_time: ${{ steps.record.outputs.start_time }}
     steps:
       - name: Record Start Time
-        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+        run: echo "start_time=$(date +%s)" >> $GITHUB_OUTPUT
 
   build_and_verify:
     name: Build and verify
@@ -135,12 +137,14 @@ jobs:
 
       - name: Record End Time and Print Duration
         run: |
+          START_TIME=${{ needs.start_timer.outputs.start_time }}
           END_TIME=$(date +%s)
           DURATION=$((END_TIME - START_TIME))
           echo "🔧 Total pipeline duration: ${DURATION}s"
-      - name: Summary
-        run: |
-          echo "::notice :: Total pipeline time: $((END_TIME - START_TIME))"
+
+          - name: Summary
+            run: |
+              echo "::notice :: Total pipeline time: $(( $(date +%s) - ${{ needs.start_timer.outputs.start_time }} ))s"
 
   deploy_test:
     name: Deploy to Test
@@ -188,12 +192,14 @@ jobs:
         run: git push heroku HEAD:refs/heads/main --force
       - name: Record End Time and Print Duration
         run: |
+          START_TIME=${{ needs.start_timer.outputs.start_time }}
           END_TIME=$(date +%s)
           DURATION=$((END_TIME - START_TIME))
-          echo "Total pipeline duration: ${DURATION}s"
-      - name: Summary
-        run: |
-          echo "::notice :: Total pipeline time: $((END_TIME - START_TIME))"
+          echo "🔧 Total pipeline duration: ${DURATION}s"
+
+          - name: Summary
+            run: |
+              echo "::notice :: Total pipeline time: $(( $(date +%s) - ${{ needs.start_timer.outputs.start_time }} ))s"
 
 
 
@@ -240,11 +246,12 @@ jobs:
         run: git push heroku HEAD:refs/heads/main --force
       - name: Record End Time and Print Duration
         run: |
+          START_TIME=${{ needs.start_timer.outputs.start_time }}
           END_TIME=$(date +%s)
           DURATION=$((END_TIME - START_TIME))
-          echo "Total pipeline duration: ${DURATION}s"
-      - name: Summary
-        run: |
-          echo "::notice :: Total pipeline time: $((END_TIME - START_TIME))"
-      
+          echo "🔧 Total pipeline duration: ${DURATION}s"
+
+          - name: Summary
+            run: |
+              echo "::notice :: Total pipeline time: $(( $(date +%s) - ${{ needs.start_timer.outputs.start_time }} ))s"
 
