@@ -25,14 +25,17 @@ on:
 
 
 jobs:
-
   start_timer:
     runs-on: ubuntu-latest
     outputs:
-      start_time: ${{ steps.record.outputs.start_time }}
+      start_time: ${{ steps.start_time.outputs.time }}
     steps:
-      - name: Record Start Time
-        run: echo "start_time=$(date +%s)" >> $GITHUB_OUTPUT
+      - name: Record and Print Start Time
+        id: start_time
+        run: |
+          time_now=$(date +%s)
+          echo "Startzeit: $time_now"
+          echo "time=$time_now" >> $GITHUB_OUTPUT
 
   build_and_verify:
     name: Build and verify
@@ -135,16 +138,11 @@ jobs:
       - name: Push to Heroku (force deployment)
         run: git push heroku HEAD:refs/heads/main --force
 
-      - name: Record End Time and Print Duration
+      - name: Print End Time
         run: |
-          START_TIME=${{ needs.start_timer.outputs.start_time }}
-          END_TIME=$(date +%s)
-          DURATION=$((END_TIME - START_TIME))
-          echo "🔧 Total pipeline duration: ${DURATION}s"
-
-          - name: Summary
-            run: |
-              echo "::notice :: Total pipeline time: $(( $(date +%s) - ${{ needs.start_timer.outputs.start_time }} ))s"
+          end_time=$(date +%s)
+          echo "Endzeit: $end_time"
+          echo "Startzeit: ${{ needs.start_timer.outputs.start_time }}"
 
   deploy_test:
     name: Deploy to Test
@@ -190,16 +188,18 @@ jobs:
 
       - name: Push to Heroku (force deployment)
         run: git push heroku HEAD:refs/heads/main --force
-      - name: Record End Time and Print Duration
+      - name: Print End Time
         run: |
-          START_TIME=${{ needs.start_timer.outputs.start_time }}
-          END_TIME=$(date +%s)
-          DURATION=$((END_TIME - START_TIME))
-          echo "🔧 Total pipeline duration: ${DURATION}s"
+          end_time=$(date +%s)
+          echo "Endzeit: $end_time"
+          echo "Startzeit: ${{ needs.start_timer.outputs.start_time }}"
+      - name: Print Total Duration
+        run: |
+          start=${{ needs.start_timer.outputs.start_time }}
+          end=$(date +%s)
+          duration=$((end - start))
+          echo "🕒 Pipeline duration: ${duration} seconds"
 
-          - name: Summary
-            run: |
-              echo "::notice :: Total pipeline time: $(( $(date +%s) - ${{ needs.start_timer.outputs.start_time }} ))s"
 
 
 
@@ -244,14 +244,9 @@ jobs:
 
       - name: Push to Heroku (force deployment)
         run: git push heroku HEAD:refs/heads/main --force
-      - name: Record End Time and Print Duration
+      - name: Print End Time
         run: |
-          START_TIME=${{ needs.start_timer.outputs.start_time }}
-          END_TIME=$(date +%s)
-          DURATION=$((END_TIME - START_TIME))
-          echo "🔧 Total pipeline duration: ${DURATION}s"
-
-          - name: Summary
-            run: |
-              echo "::notice :: Total pipeline time: $(( $(date +%s) - ${{ needs.start_timer.outputs.start_time }} ))s"
+          end_time=$(date +%s)
+          echo "Endzeit: $end_time"
+          echo "Startzeit: ${{ needs.start_timer.outputs.start_time }}"
 
