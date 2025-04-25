@@ -45,7 +45,8 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: ./mvnw -B clean verify --no-transfer-progress
+        run: ./mvnw -B clean install -DskipTests --no-transfer-progress
+        #run: ./mvnw -B clean verify --no-transfer-progress
 
   test:
     name: Run Tests
